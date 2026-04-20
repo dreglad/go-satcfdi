@@ -171,6 +171,20 @@ El cliente prevalida:
 - salida JSON en ejemplos y CLI donde aplica
 - documentación basada en texto, sin depender de imágenes para entender el flujo
 
+## Docker
+
+El proyecto incluye soporte para Docker y Docker Compose para ejecutar `satcfdid`:
+
+```bash
+docker compose up -d
+```
+
+Esto expone el servicio en `https://localhost:8443` con un certificado TLS auto-firmado generado automáticamente.
+
+En producción se recomienda:
+- Usar un certificado TLS emitido por una autoridad certificadora (CA) reconocida
+- O bien, exponer el servicio tras un **Proxy Inverso o API Gateway**, utilizando la variable `SAT_SERVICE_INSECURE_H2C=true` para operar vía HTTP/2 Cleartext (h2c) si el proxy gestiona la terminación TLS.
+
 ## Soporte y comunidad
 
 - bugs y propuestas: issues

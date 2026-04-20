@@ -1,0 +1,35 @@
+# VCS & IDE
+.git
+.github
+.gitignore
+.idea
+.vscode
+.editorconfig
+
+# Build artifacts
+bin/
+dist/
+coverage.out
+*.test
+*.out
+Makefile
+
+# Documentation & metadata
+docs/
+*.md
+LICENSE
+
+# Examples & testdata (not needed in the server image)
+examples/
+testdata/
+scripts/
+
+# Proto tooling config (buf generates at dev time, not at build time)
+buf.yaml
+buf.gen.yaml
+buf.gen.examples.yaml
+
+# Docker
+.dockerignore
+compose.yml
+Dockerfile

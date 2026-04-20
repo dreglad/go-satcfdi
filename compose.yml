@@ -1,0 +1,41 @@
+name: satcfdi
+
+services:
+  satcfdid:
+    build: .
+    image: satcfdid:latest
+    restart: unless-stopped
+    ports:
+      - "8443:8443"
+    environment:
+      - SAT_SERVICE_INSECURE_H2C=false
+      - SAT_SERVICE_TLS_CERT=/certs/server.crt
+      - SAT_SERVICE_TLS_KEY=/certs/server.key
+    volumes:
+      - certs-data:/certs:ro
+    depends_on:
+      init-certs:
+        condition: service_completed_successfully
+
+  init-certs:
+    image: alpine:3.22
+    restart: "no"
+    volumes:
+      - certs-data:/certs
+    command: >
+      sh -c "
+      if [ ! -f /certs/server.crt ]; then
+        echo 'Generando certificado TLS auto-firmado...'
+        apk add --no-cache openssl
+        openssl req -x509 -newkey rsa:4096 -keyout /certs/server.key -out /certs/server.crt -days 365 -nodes -subj '/CN=localhost'
+        chown 65532:65532 /certs/server.key /certs/server.crt
+        chmod 644 /certs/server.crt
+        chmod 600 /certs/server.key
+        echo 'Certificado generado exitosamente.'
+      else
+        echo 'Certificado ya existe, saltando generación.'
+      fi
+      "
+
+volumes:
+  certs-data:
